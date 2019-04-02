@@ -45,6 +45,7 @@
 
 
 #include <metal/drivers/fixed-clock.h>
+#include <metal/memory.h>
 #include <metal/drivers/riscv,clint0.h>
 #include <metal/drivers/riscv,cpu.h>
 #include <metal/drivers/riscv,plic0.h>
@@ -57,6 +58,15 @@
 /* From clock@0 */
 asm (".weak __metal_dt_clock_0");
 struct __metal_driver_fixed_clock __metal_dt_clock_0;
+
+asm (".weak __metal_dt_mem_dtim_80000000");
+struct metal_memory __metal_dt_mem_dtim_80000000;
+
+asm (".weak __metal_dt_mem_itim_8000000");
+struct metal_memory __metal_dt_mem_itim_8000000;
+
+asm (".weak __metal_dt_mem_spi_10014000");
+struct metal_memory __metal_dt_mem_spi_10014000;
 
 /* From clint@2000000 */
 asm (".weak __metal_dt_clint_2000000");
@@ -96,6 +106,21 @@ struct __metal_driver_fixed_clock __metal_dt_clock_0 = {
     .vtable = &__metal_driver_vtable_fixed_clock,
     .clock.vtable = &__metal_driver_vtable_fixed_clock.clock,
     .rate = 65000000UL,
+};
+
+struct metal_memory __metal_dt_mem_dtim_80000000 = {
+    ._base_address = 2147483648UL,
+    ._size = 16384UL,
+};
+
+struct metal_memory __metal_dt_mem_itim_8000000 = {
+    ._base_address = 134217728UL,
+    ._size = 16384UL,
+};
+
+struct metal_memory __metal_dt_mem_spi_10014000 = {
+    ._base_address = 536870912UL,
+    ._size = 536870912UL,
 };
 
 /* From clint@2000000 */
@@ -223,6 +248,14 @@ struct __metal_driver_sifive_uart0 __metal_dt_serial_10013000 = {
     .interrupt_line = 5UL,
 };
 
+
+#define __METAL_DT_MAX_MEMORIES 3
+
+asm (".weak __metal_memory_table");
+struct metal_memory *__metal_memory_table[] = {
+					&__metal_dt_mem_dtim_80000000,
+					&__metal_dt_mem_itim_8000000,
+					&__metal_dt_mem_spi_10014000};
 
 /* From serial@10013000 */
 #define __METAL_DT_STDOUT_UART_HANDLE (&__metal_dt_serial_10013000.uart)

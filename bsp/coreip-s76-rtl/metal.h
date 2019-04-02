@@ -41,12 +41,16 @@
 
 
 #include <metal/drivers/fixed-clock.h>
+#include <metal/memory.h>
 #include <metal/drivers/riscv,clint0.h>
 #include <metal/drivers/riscv,cpu.h>
 #include <metal/drivers/riscv,plic0.h>
 #include <metal/pmp.h>
 #include <metal/drivers/sifive,global-external-interrupts0.h>
 #include <metal/drivers/sifive,test0.h>
+
+asm (".weak __metal_dt_mem_memory_80000000");
+struct metal_memory __metal_dt_mem_memory_80000000;
 
 /* From clint@2000000 */
 asm (".weak __metal_dt_clint_2000000");
@@ -72,6 +76,9 @@ struct __metal_driver_sifive_global_external_interrupts0 __metal_dt_global_exter
 asm (".weak __metal_dt_teststatus_4000");
 struct __metal_driver_sifive_test0 __metal_dt_teststatus_4000;
 
+
+struct metal_memory __metal_dt_mem_memory_80000000 = {
+};
 
 /* From clint@2000000 */
 struct __metal_driver_riscv_clint0 __metal_dt_clint_2000000 = {
@@ -262,6 +269,12 @@ struct __metal_driver_sifive_test0 __metal_dt_teststatus_4000 = {
     .size = 4096UL,
 };
 
+
+#define __METAL_DT_MAX_MEMORIES 1
+
+asm (".weak __metal_memory_table");
+struct metal_memory *__metal_memory_table[] = {
+					&__metal_dt_mem_memory_80000000};
 
 /* From clint@2000000 */
 #define __METAL_DT_RISCV_CLINT0_HANDLE (&__metal_dt_clint_2000000.controller)

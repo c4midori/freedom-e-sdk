@@ -43,6 +43,7 @@
 
 
 #include <metal/drivers/fixed-clock.h>
+#include <metal/memory.h>
 #include <metal/drivers/riscv,clint0.h>
 #include <metal/drivers/riscv,cpu.h>
 #include <metal/drivers/riscv,plic0.h>
@@ -50,6 +51,15 @@
 #include <metal/drivers/sifive,local-external-interrupts0.h>
 #include <metal/drivers/sifive,global-external-interrupts0.h>
 #include <metal/drivers/sifive,test0.h>
+
+asm (".weak __metal_dt_mem_testram_20000000");
+struct metal_memory __metal_dt_mem_testram_20000000;
+
+asm (".weak __metal_dt_mem_dtim_80000000");
+struct metal_memory __metal_dt_mem_dtim_80000000;
+
+asm (".weak __metal_dt_mem_itim_8000000");
+struct metal_memory __metal_dt_mem_itim_8000000;
 
 /* From clint@2000000 */
 asm (".weak __metal_dt_clint_2000000");
@@ -82,6 +92,21 @@ struct __metal_driver_sifive_global_external_interrupts0 __metal_dt_global_exter
 asm (".weak __metal_dt_teststatus_4000");
 struct __metal_driver_sifive_test0 __metal_dt_teststatus_4000;
 
+
+struct metal_memory __metal_dt_mem_testram_20000000 = {
+    ._base_address = 536870912UL,
+    ._size = 67108864UL,
+};
+
+struct metal_memory __metal_dt_mem_dtim_80000000 = {
+    ._base_address = 2147483648UL,
+    ._size = 65536UL,
+};
+
+struct metal_memory __metal_dt_mem_itim_8000000 = {
+    ._base_address = 134217728UL,
+    ._size = 16384UL,
+};
 
 /* From clint@2000000 */
 struct __metal_driver_riscv_clint0 __metal_dt_clint_2000000 = {
@@ -303,6 +328,14 @@ struct __metal_driver_sifive_test0 __metal_dt_teststatus_4000 = {
     .size = 4096UL,
 };
 
+
+#define __METAL_DT_MAX_MEMORIES 3
+
+asm (".weak __metal_memory_table");
+struct metal_memory *__metal_memory_table[] = {
+					&__metal_dt_mem_testram_20000000,
+					&__metal_dt_mem_dtim_80000000,
+					&__metal_dt_mem_itim_8000000};
 
 /* From clint@2000000 */
 #define __METAL_DT_RISCV_CLINT0_HANDLE (&__metal_dt_clint_2000000.controller)

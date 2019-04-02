@@ -45,6 +45,7 @@
 
 
 #include <metal/drivers/fixed-clock.h>
+#include <metal/memory.h>
 #include <metal/drivers/riscv,cpu.h>
 #include <metal/pmp.h>
 #include <metal/drivers/sifive,clic0.h>
@@ -61,6 +62,12 @@
 /* From clock@0 */
 asm (".weak __metal_dt_clock_0");
 struct __metal_driver_fixed_clock __metal_dt_clock_0;
+
+asm (".weak __metal_dt_mem_sys_sram_0_80000000");
+struct metal_memory __metal_dt_mem_sys_sram_0_80000000;
+
+asm (".weak __metal_dt_mem_spi_20004000");
+struct metal_memory __metal_dt_mem_spi_20004000;
 
 /* From cpu@0 */
 asm (".weak __metal_dt_cpu_0");
@@ -148,6 +155,16 @@ struct __metal_driver_fixed_clock __metal_dt_clock_0 = {
     .vtable = &__metal_driver_vtable_fixed_clock,
     .clock.vtable = &__metal_driver_vtable_fixed_clock.clock,
     .rate = 32500000UL,
+};
+
+struct metal_memory __metal_dt_mem_sys_sram_0_80000000 = {
+    ._base_address = 2147483648UL,
+    ._size = 65536UL,
+};
+
+struct metal_memory __metal_dt_mem_spi_20004000 = {
+    ._base_address = 1073741824UL,
+    ._size = 536870912UL,
 };
 
 /* From cpu@0 */
@@ -430,6 +447,13 @@ struct __metal_driver_sifive_uart0 __metal_dt_serial_20000000 = {
     .interrupt_line = 16UL,
 };
 
+
+#define __METAL_DT_MAX_MEMORIES 2
+
+asm (".weak __metal_memory_table");
+struct metal_memory *__metal_memory_table[] = {
+					&__metal_dt_mem_sys_sram_0_80000000,
+					&__metal_dt_mem_spi_20004000};
 
 /* From serial@20000000 */
 #define __METAL_DT_STDOUT_UART_HANDLE (&__metal_dt_serial_20000000.uart)

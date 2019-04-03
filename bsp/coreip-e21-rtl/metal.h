@@ -39,11 +39,21 @@
 
 
 #include <metal/drivers/fixed-clock.h>
+#include <metal/memory.h>
 #include <metal/drivers/riscv,cpu.h>
 #include <metal/pmp.h>
 #include <metal/drivers/sifive,clic0.h>
 #include <metal/drivers/sifive,local-external-interrupts0.h>
 #include <metal/drivers/sifive,test0.h>
+
+asm (".weak __metal_dt_mem_sys_sram_0_80000000");
+struct metal_memory __metal_dt_mem_sys_sram_0_80000000;
+
+asm (".weak __metal_dt_mem_sys_sram_1_80008000");
+struct metal_memory __metal_dt_mem_sys_sram_1_80008000;
+
+asm (".weak __metal_dt_mem_testram_20000000");
+struct metal_memory __metal_dt_mem_testram_20000000;
 
 /* From cpu@0 */
 asm (".weak __metal_dt_cpu_0");
@@ -68,6 +78,21 @@ struct __metal_driver_sifive_local_external_interrupts0 __metal_dt_local_externa
 asm (".weak __metal_dt_teststatus_4000");
 struct __metal_driver_sifive_test0 __metal_dt_teststatus_4000;
 
+
+struct metal_memory __metal_dt_mem_sys_sram_0_80000000 = {
+    ._base_address = 2147483648UL,
+    ._size = 32768UL,
+};
+
+struct metal_memory __metal_dt_mem_sys_sram_1_80008000 = {
+    ._base_address = 2147516416UL,
+    ._size = 32768UL,
+};
+
+struct metal_memory __metal_dt_mem_testram_20000000 = {
+    ._base_address = 536870912UL,
+    ._size = 134217728UL,
+};
 
 /* From cpu@0 */
 struct __metal_driver_cpu __metal_dt_cpu_0 = {
@@ -253,6 +278,14 @@ struct __metal_driver_sifive_test0 __metal_dt_teststatus_4000 = {
     .size = 4096UL,
 };
 
+
+#define __METAL_DT_MAX_MEMORIES 3
+
+asm (".weak __metal_memory_table");
+struct metal_memory *__metal_memory_table[] = {
+					&__metal_dt_mem_sys_sram_0_80000000,
+					&__metal_dt_mem_sys_sram_1_80008000,
+					&__metal_dt_mem_testram_20000000};
 
 /* From cpu@0 */
 #define __METAL_DT_RISCV_CPU_HANDLE (&__metal_dt_cpu_0.cpu)

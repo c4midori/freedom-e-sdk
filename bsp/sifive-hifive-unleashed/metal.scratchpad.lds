@@ -4,9 +4,9 @@ ENTRY(_enter)
 
 MEMORY
 {
-	ram (wxa!ri) : ORIGIN = 0x80000000, LENGTH = 0x8000
-	itim (wx!rai) : ORIGIN = 0x80008000, LENGTH = 0x8000
-	flash (rxai!w) : ORIGIN = 0x40400000, LENGTH = 0x1fc00000
+	ram (wxa!ri) : ORIGIN = 0x80000000, LENGTH = 0x80000000
+	itim (wx!rai) : ORIGIN = 0x1800000, LENGTH = 0x4000
+	flash (rxai!w) : ORIGIN = 0x20000000, LENGTH = 0x10000000
 }
 
 PHDRS
@@ -210,6 +210,10 @@ SECTIONS
 		PROVIDE(metal_segment_stack_begin = .);
 		. = __stack_size;
 		PROVIDE( _sp = . );
+		. = __stack_size;
+		. = __stack_size;
+		. = __stack_size;
+		. = __stack_size;
 		PROVIDE(metal_segment_stack_end = .);
 	} >ram AT>ram :ram
 

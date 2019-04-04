@@ -5,10 +5,20 @@
 
 #ifdef __METAL_MACHINE_MACROS
 
+#define __METAL_CLINT_NUM_PARENTS 2
+
+#ifndef __METAL_CLINT_NUM_PARENTS
+#define __METAL_CLINT_NUM_PARENTS 0
+#endif
 #define __METAL_PLIC_SUBINTERRUPTS 27
+
+#define __METAL_PLIC_NUM_PARENTS 1
 
 #ifndef __METAL_PLIC_SUBINTERRUPTS
 #define __METAL_PLIC_SUBINTERRUPTS 0
+#endif
+#ifndef __METAL_PLIC_NUM_PARENTS
+#define __METAL_PLIC_NUM_PARENTS 0
 #endif
 #ifndef __METAL_CLIC_SUBINTERRUPTS
 #define __METAL_CLIC_SUBINTERRUPTS 0
@@ -20,11 +30,15 @@
 
 #define METAL_MAX_CLINT_INTERRUPTS 2
 
+#define __METAL_CLINT_NUM_PARENTS 2
+
 #define __METAL_INTERRUPT_CONTROLLER_C000000_INTERRUPTS 1
 
 #define __METAL_PLIC_SUBINTERRUPTS 27
 
 #define METAL_MAX_PLIC_INTERRUPTS 1
+
+#define __METAL_PLIC_NUM_PARENTS 1
 
 #define __METAL_CLIC_SUBINTERRUPTS 0
 #define METAL_MAX_CLIC_INTERRUPTS 0
@@ -78,9 +92,8 @@ struct __metal_driver_riscv_clint0 __metal_dt_clint_2000000;
 asm (".weak __metal_dt_cpu_0");
 struct __metal_driver_cpu __metal_dt_cpu_0;
 
-/* From interrupt_controller */
-asm (".weak __metal_dt_interrupt_controller");
-struct __metal_driver_riscv_cpu_intc __metal_dt_interrupt_controller;
+asm (".weak __metal_dt_cpu_0_interrupt_controller");
+struct __metal_driver_riscv_cpu_intc __metal_dt_cpu_0_interrupt_controller;
 
 /* From interrupt_controller@c000000 */
 asm (".weak __metal_dt_interrupt_controller_c000000");
@@ -148,8 +161,9 @@ struct __metal_driver_riscv_clint0 __metal_dt_clint_2000000 = {
     .control_size = 65536UL,
     .init_done = 0,
     .num_interrupts = METAL_MAX_CLINT_INTERRUPTS,
-    .interrupt_parent = &__metal_dt_interrupt_controller.controller,
+    .interrupt_parents[0] = &__metal_dt_cpu_0_interrupt_controller.controller,
     .interrupt_lines[0] = 3,
+    .interrupt_parents[1] = &__metal_dt_cpu_0_interrupt_controller.controller,
     .interrupt_lines[1] = 7,
 };
 
@@ -158,11 +172,11 @@ struct __metal_driver_cpu __metal_dt_cpu_0 = {
     .vtable = &__metal_driver_vtable_cpu,
     .cpu.vtable = &__metal_driver_vtable_cpu.cpu_vtable,
     .timebase = 1000000UL,
-    .interrupt_controller = &__metal_dt_interrupt_controller.controller,
+    .interrupt_controller = &__metal_dt_cpu_0_interrupt_controller.controller,
 };
 
 /* From interrupt_controller */
-struct __metal_driver_riscv_cpu_intc __metal_dt_interrupt_controller = {
+struct __metal_driver_riscv_cpu_intc __metal_dt_cpu_0_interrupt_controller = {
     .vtable = &__metal_driver_vtable_riscv_cpu_intc,
     .controller.vtable = &__metal_driver_vtable_riscv_cpu_intc.controller_vtable,
     .init_done = 0,
@@ -174,9 +188,8 @@ struct __metal_driver_riscv_plic0 __metal_dt_interrupt_controller_c000000 = {
     .vtable = &__metal_driver_vtable_riscv_plic0,
     .controller.vtable = &__metal_driver_vtable_riscv_plic0.plic_vtable,
     .init_done = 0,
-/* From interrupt_controller */
-    .interrupt_parent = &__metal_dt_interrupt_controller.controller,
-    .interrupt_line = 11UL,
+    .interrupt_parents[0] = &__metal_dt_cpu_0_interrupt_controller.controller,
+    .interrupt_lines[0] = 11,
     .control_base = 201326592UL,
     .control_size = 67108864UL,
     .max_priority = 7UL,
@@ -189,8 +202,7 @@ struct __metal_driver_sifive_local_external_interrupts0 __metal_dt_local_externa
     .vtable = &__metal_driver_vtable_sifive_local_external_interrupts0,
     .irc.vtable = &__metal_driver_vtable_sifive_local_external_interrupts0.local0_vtable,
     .init_done = 0,
-/* From interrupt_controller */
-    .interrupt_parent = &__metal_dt_interrupt_controller.controller,
+    .interrupt_parent = &__metal_dt_cpu_0_interrupt_controller.controller,
     .num_interrupts = METAL_MAX_LOCAL_EXT_INTERRUPTS,
     .interrupt_lines[0] = 16,
     .interrupt_lines[1] = 17,
@@ -328,21 +340,11 @@ struct __metal_driver_sifive_fe310_g000_prci __metal_dt_prci_10008000 = {
 
 #define __METAL_DT_CLINT_2000000_HANDLE (&__metal_dt_clint_2000000.controller)
 
-/* From cpu@0 */
-#define __METAL_DT_RISCV_CPU_HANDLE (&__metal_dt_cpu_0.cpu)
-
-#define __METAL_DT_CPU_0_HANDLE (&__metal_dt_cpu_0.cpu)
-
 #define __METAL_DT_MAX_HARTS 1
 
 asm (".weak __metal_cpu_table");
 struct __metal_driver_cpu *__metal_cpu_table[] = {
 					&__metal_dt_cpu_0};
-
-/* From interrupt_controller */
-#define __METAL_DT_RISCV_CPU_INTC_HANDLE (&__metal_dt_interrupt_controller.controller)
-
-#define __METAL_DT_INTERRUPT_CONTROLLER_HANDLE (&__metal_dt_interrupt_controller.controller)
 
 /* From interrupt_controller@c000000 */
 #define __METAL_DT_RISCV_PLIC0_HANDLE (&__metal_dt_interrupt_controller_c000000.controller)

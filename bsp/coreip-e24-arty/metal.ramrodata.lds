@@ -218,7 +218,6 @@ SECTIONS
 	{
 		PROVIDE( metal_segment_heap_target_start = . );
 		. = __heap_size;
-		. = __heap_size == 0 ? 0 : ORIGIN(ram) + LENGTH(ram);
 		PROVIDE( metal_segment_heap_target_end = . );
 		PROVIDE( _heap_end = . );
 	} >ram AT>ram :ram

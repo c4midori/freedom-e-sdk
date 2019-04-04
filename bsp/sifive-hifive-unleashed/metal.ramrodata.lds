@@ -4,8 +4,9 @@ ENTRY(_enter)
 
 MEMORY
 {
-	ram (wxa!ri) : ORIGIN = 0x80000000, LENGTH = 0x10000000
-	flash (rxai!w) : ORIGIN = 0x40400000, LENGTH = 0x1fc00000
+	ram (wxa!ri) : ORIGIN = 0x80000000, LENGTH = 0x80000000
+	itim (wx!rai) : ORIGIN = 0x1800000, LENGTH = 0x4000
+	flash (rxai!w) : ORIGIN = 0x20000000, LENGTH = 0x10000000
 }
 
 PHDRS
@@ -119,13 +120,13 @@ SECTIONS
 	{
 		. = ALIGN(4);
 		PROVIDE( metal_segment_itim_target_start = . );
-	} >ram AT>flash :ram_init
+	} >itim AT>flash :itim_init
 
 
 	.itim 		:
 	{
 		*(.itim .itim.*)
-	} >flash AT>flash :flash
+	} >itim AT>flash :itim_init
 
 
 	. = ALIGN(8);
@@ -136,7 +137,6 @@ SECTIONS
 		*(.text.startup .text.startup.*)
 		*(.text .text.*)
 		*(.gnu.linkonce.t.*)
-		*(.itim .itim.*)
 	} >flash AT>flash :flash
 
 

@@ -175,7 +175,7 @@
 		};
 		tlclk: tlclk {
 			compatible = "fixed-factor-clock";
-			clocks = <&prci 0>;
+			clocks = <&refclk>;
 			#clock-cells = <0>;
 			clock-div = <2>;
 			clock-mult = <1>;

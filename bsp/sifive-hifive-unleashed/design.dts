@@ -160,6 +160,10 @@
 		#size-cells = <2>;
 		compatible = "SiFive,FU540G-soc", "fu500-soc", "sifive-soc", "simple-bus";
 		ranges;
+		pmp: pmp@0 {
+			compatible = "riscv,pmp";
+			regions = <1>;
+		};
 		refclk: refclk {
 			#clock-cells = <0>;
 			compatible = "fixed-clock";
